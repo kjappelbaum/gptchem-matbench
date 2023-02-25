@@ -1,12 +1,8 @@
-from collections import defaultdict
-
-import matplotlib.pyplot as plt
 from fastcore.xtras import save_pickle, load_pickle
 from gptchem.gpt_regressor import GPTRegressor
 from gptchem.tuner import Tuner
 from loguru import logger
 from matbench.bench import MatbenchBenchmark
-from matbench.constants import CLF_KEY
 from pathlib import Path
 
 logger.enable("gptchem")
