@@ -1,12 +1,13 @@
 from collections import defaultdict
 
 import matplotlib.pyplot as plt
-from fastcore.xtras import save_pickle
+from fastcore.xtras import save_pickle, load_pickle
 from gptchem.gpt_regressor import GPTRegressor
 from gptchem.tuner import Tuner
 from loguru import logger
 from matbench.bench import MatbenchBenchmark
 from matbench.constants import CLF_KEY
+from pathlib import Path
 
 logger.enable("gptchem")
 
@@ -75,10 +76,16 @@ if __name__ == "__main__":
             if task.is_recorded[fold_ind]:
                 print(f"Skipping fold {fold_ind} of {task.dataset_name}")
                 continue
-            pred = train_test_fold(task, fold)
+
+            outname = f"{task.dataset_name}_{fold}.pkl"
+            if Path(outname).exists() and load_pickle(outname) is not None:
+                print(f"Skipping fold {fold_ind} of {task.dataset_name}. File exists.")
+                pred = load_pickle(outname)
+            else:
+                pred = train_test_fold(task, fold)
+                save_pickle(f"{task.dataset_name}_{fold}.pkl", pred)
             predictions.append(pred)
-            train_inputs, train_outputs = task.get_train_and_val_data(fold)
+            task.record(fold, pred)
 
         print(f"{task.dataset_name}: MAE  {task.scores['mae']['mean']}")
-
         save_pickle(f"{task.dataset_name}.pkl", predictions)
