@@ -74,9 +74,15 @@ if __name__ == "__main__":
                 continue
 
             outname = f"{task.dataset_name}_{fold}.pkl"
-            if Path(outname).exists() and load_pickle(outname) is not None:
+            if (
+                Path(outname).exists()
+                and load_pickle(outname) is not None
+                and sum([x is not None for x in load_pickle(outname)])
+                == len(load_pickle(outname))
+            ):
                 print(f"Skipping fold {fold_ind} of {task.dataset_name}. File exists.")
                 pred = load_pickle(outname)
+                print(pred)
             else:
                 pred = train_test_fold(task, fold)
                 save_pickle(f"{task.dataset_name}_{fold}.pkl", pred)

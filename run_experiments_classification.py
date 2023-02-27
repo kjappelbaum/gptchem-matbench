@@ -38,7 +38,7 @@ def train_test_fold(task, fold):
     train_inputs, train_outputs = task.get_train_and_val_data(fold)
 
     # train and validate your model
-    classifier.fit(train_inputs, train_outputs.values)
+    classifier.fit(train_inputs, train_outputs.astype(int))
 
     # Get testing data
     test_inputs = task.get_test_data(fold, include_target=False)
@@ -50,7 +50,6 @@ def train_test_fold(task, fold):
 
     # Record your data!
     task.record(fold, predictions)
-    return predictions
 
 
 mb = MatbenchBenchmark(
@@ -73,7 +72,12 @@ if __name__ == "__main__":
                 continue
 
             outname = f"{task.dataset_name}_{fold}.pkl"
-            if Path(outname).exists() and load_pickle(outname) is not None:
+            if (
+                Path(outname).exists()
+                and load_pickle(outname) is not None
+                and sum([x is not None for x in load_pickle(outname)])
+                == len(load_pickle(outname))
+            ):
                 print(f"Skipping fold {fold_ind} of {task.dataset_name}. File exists.")
                 pred = load_pickle(outname)
             else:
