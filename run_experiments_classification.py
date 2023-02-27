@@ -4,6 +4,7 @@ from gptchem.tuner import Tuner
 from loguru import logger
 from matbench.bench import MatbenchBenchmark
 from pathlib import Path
+import os
 
 logger.enable("gptchem")
 
@@ -71,7 +72,7 @@ if __name__ == "__main__":
                 print(f"Skipping fold {fold_ind} of {task.dataset_name}")
                 continue
 
-            outname = f"{task.dataset_name}_{fold}.pkl"
+            outname = os.path.join("results", f"{task.dataset_name}_{fold}.pkl")
             if (
                 Path(outname).exists()
                 and load_pickle(outname) is not None
