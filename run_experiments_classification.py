@@ -52,6 +52,8 @@ def train_test_fold(task, fold):
     # Record your data!
     task.record(fold, predictions)
 
+    return predictions
+
 
 mb = MatbenchBenchmark(
     autoload=True,
