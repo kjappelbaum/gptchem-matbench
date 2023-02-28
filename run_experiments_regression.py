@@ -86,7 +86,7 @@ if __name__ == "__main__":
                 print(pred)
             else:
                 pred = train_test_fold(task, fold)
-                save_pickle(f"{task.dataset_name}_{fold}.pkl", pred)
+                save_pickle(outname, pred)
             predictions.append(pred)
             task.record(fold, pred)
 

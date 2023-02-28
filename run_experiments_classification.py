@@ -58,7 +58,7 @@ def train_test_fold(task, fold):
 mb = MatbenchBenchmark(
     autoload=True,
     subset=[
-        "matbench_glass",
+        #    "matbench_glass",
         "matbench_expt_is_metal",
     ],
 )
@@ -85,7 +85,7 @@ if __name__ == "__main__":
                 pred = load_pickle(outname)
             else:
                 pred = train_test_fold(task, fold)
-                save_pickle(f"{task.dataset_name}_{fold}.pkl", pred)
+                save_pickle(outname, pred)
             predictions.append(pred)
             task.record(fold, pred)
 
